@@ -1,0 +1,489 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Writing Lab</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css">
+<script src="https://js.puter.com/v2/"></script>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Libre+Baskerville:wght@400;700&family=Source+Sans+3:wght@300;400;500;600&display=swap');
+:root {
+  --lib-bg: #faf8f4;
+  --lib-card: #ffffff;
+  --lib-ink: #2c2420;
+  --lib-muted: #7a6e62;
+  --lib-border: #e0d8cd;
+  --lib-accent: #b44a2f;
+  --lib-gold: #c9952a;
+  --lib-sage: #3d7a5f;
+  --lib-parchment: #f3efe7;
+  --lib-blue: #3a6b8c;
+  --lib-radius: 10px;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: 'Source Sans 3', sans-serif; background: var(--lib-bg); color: var(--lib-ink); }
+
+.wl-header {
+  background: linear-gradient(135deg, #2c2420 0%, #3d332c 100%);
+  padding: 2.5rem 2rem 2rem;
+  border-bottom: 4px solid var(--lib-gold);
+  position: relative;
+  overflow: hidden;
+  text-align: center;
+}
+.wl-header::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: repeating-linear-gradient(90deg, transparent, transparent 40px, rgba(255,255,255,0.015) 40px, rgba(255,255,255,0.015) 41px);
+}
+.wl-title {
+  font-family: 'Libre Baskerville', serif;
+  font-size: 3rem;
+  color: #f3efe7;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+}
+.wl-title i { font-size: 2.5rem; color: var(--lib-gold); }
+.wl-subtitle {
+  font-size: 0.85rem;
+  color: #a89a8a;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  margin-top: 0.5rem;
+  position: relative;
+}
+
+.wl-nav {
+  display: flex;
+  gap: 0;
+  background: #352e28;
+  padding: 0 1.5rem;
+  overflow-x: auto;
+}
+.wl-nav button {
+  background: none;
+  border: none;
+  color: #8a7d70;
+  padding: 0.85rem 1.3rem;
+  cursor: pointer;
+  font-family: 'Source Sans 3', sans-serif;
+  font-size: 0.88rem;
+  font-weight: 500;
+  white-space: nowrap;
+  border-bottom: 3px solid transparent;
+  transition: all 0.2s;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+.wl-nav button:hover { color: #e0d8cd; }
+.wl-nav button.active { color: var(--lib-gold); border-bottom-color: var(--lib-gold); }
+.wl-nav button i { font-size: 16px; }
+
+.wl-main { padding: 2rem; max-width: 880px; margin: 0 auto; }
+.wl-section { display: none; }
+.wl-section.active { display: block; }
+
+.sec-head {
+  font-family: 'Libre Baskerville', serif;
+  font-size: 1.5rem;
+  color: var(--lib-ink);
+  margin-bottom: 0.4rem;
+}
+.sec-desc { color: var(--lib-muted); font-size: 0.88rem; margin-bottom: 1.75rem; line-height: 1.6; }
+
+.conn-tabs { display: flex; flex-wrap: wrap; gap: 0.45rem; margin-bottom: 1.5rem; }
+.ct {
+  background: var(--lib-parchment);
+  border: 1.5px solid var(--lib-border);
+  border-radius: 20px;
+  padding: 0.35rem 0.9rem;
+  font-size: 0.8rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+  font-family: 'Source Sans 3', sans-serif;
+  color: var(--lib-ink);
+}
+.ct:hover { border-color: var(--lib-accent); color: var(--lib-accent); }
+.ct.active { background: var(--lib-accent); border-color: var(--lib-accent); color: #fff; }
+
+.card {
+  background: var(--lib-card);
+  border: 1px solid var(--lib-border);
+  border-radius: var(--lib-radius);
+  padding: 1.4rem 1.5rem;
+  margin-bottom: 1.25rem;
+}
+.card h3 {
+  font-size: 0.72rem;
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+  color: var(--lib-accent);
+  font-weight: 600;
+  margin-bottom: 0.75rem;
+}
+.card-tip {
+  font-size: 0.85rem;
+  color: var(--lib-muted);
+  margin-bottom: 0.75rem;
+  line-height: 1.5;
+}
+.chips { display: flex; flex-wrap: wrap; gap: 0.4rem; margin-bottom: 1rem; }
+.chip {
+  background: var(--lib-parchment);
+  border: 1px solid var(--lib-border);
+  border-radius: 6px;
+  padding: 0.25rem 0.65rem;
+  font-size: 0.84rem;
+  font-weight: 500;
+  color: var(--lib-sage);
+}
+.prompt {
+  background: var(--lib-parchment);
+  border-left: 4px solid var(--lib-gold);
+  padding: 0.85rem 1.1rem;
+  border-radius: 0 8px 8px 0;
+  margin-bottom: 1rem;
+  font-size: 0.88rem;
+  line-height: 1.6;
+  color: #555;
+}
+.prompt strong { color: var(--lib-ink); }
+textarea {
+  width: 100%;
+  border: 1.5px solid var(--lib-border);
+  border-radius: 8px;
+  padding: 0.85rem 1rem;
+  font-family: 'Source Sans 3', sans-serif;
+  font-size: 0.9rem;
+  line-height: 1.7;
+  color: var(--lib-ink);
+  background: #fff;
+  resize: vertical;
+  min-height: 90px;
+  transition: border-color 0.2s;
+  outline: none;
+}
+textarea:focus { border-color: var(--lib-accent); }
+.wc { font-size: 0.75rem; color: #aaa; margin-top: 0.3rem; text-align: right; }
+
+.btn-row { display: flex; gap: 0.6rem; flex-wrap: wrap; margin-top: 0.6rem; }
+.btn {
+  border: none;
+  border-radius: 8px;
+  padding: 0.6rem 1.25rem;
+  font-family: 'Source Sans 3', sans-serif;
+  font-size: 0.85rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.15s;
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+.btn i { font-size: 15px; }
+.btn-primary { background: var(--lib-accent); color: #fff; }
+.btn-primary:hover { background: #a03e25; }
+.btn-outline { background: none; color: var(--lib-accent); border: 1.5px solid var(--lib-accent); }
+.btn-outline:hover { background: var(--lib-accent); color: #fff; }
+.btn:disabled { opacity: 0.4; cursor: not-allowed; }
+
+.fb {
+  margin-top: 1rem;
+  background: #f0f8f3;
+  border: 1px solid #b5d6c4;
+  border-radius: var(--lib-radius);
+  padding: 1.1rem 1.3rem;
+  font-size: 0.86rem;
+  line-height: 1.8;
+  color: #2d5a4a;
+  white-space: pre-wrap;
+}
+.fb.loading { color: #999; font-style: italic; background: var(--lib-parchment); border-color: var(--lib-border); }
+
+.topic-pills { display: flex; flex-wrap: wrap; gap: 0.45rem; margin-bottom: 1.5rem; }
+
+.essay-part { margin-bottom: 1.25rem; }
+.essay-part h3 {
+  font-family: 'Libre Baskerville', serif;
+  font-size: 1rem;
+  margin-bottom: 0.3rem;
+  color: var(--lib-ink);
+}
+.essay-part p { font-size: 0.82rem; color: var(--lib-muted); margin-bottom: 0.75rem; line-height: 1.5; }
+
+.xp-bar {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.65rem 1.25rem;
+  background: var(--lib-parchment);
+  border: 1px solid var(--lib-border);
+  border-radius: 8px;
+  margin-bottom: 1.75rem;
+}
+.xp-label { font-size: 0.78rem; font-weight: 600; color: var(--lib-muted); text-transform: uppercase; letter-spacing: 1px; white-space: nowrap; }
+.xp-track { flex: 1; height: 10px; background: var(--lib-border); border-radius: 5px; overflow: hidden; }
+.xp-fill { height: 100%; background: var(--lib-gold); border-radius: 5px; transition: width 0.5s; width: 0%; }
+.xp-pts { font-size: 0.85rem; font-weight: 600; color: var(--lib-gold); white-space: nowrap; }
+</style>
+</head>
+<body>
+
+<div class="wl-header">
+  <div class="wl-title"><i class="ti ti-feather" aria-hidden="true"></i> The Writing Lab</div>
+  <div class="wl-subtitle">Practice makes progress</div>
+</div>
+
+<div class="wl-nav" id="nav">
+  <button class="active" onclick="go('s1')"><i class="ti ti-link" aria-hidden="true"></i> Connectors</button>
+  <button onclick="go('s2')"><i class="ti ti-align-left" aria-hidden="true"></i> Paragraphs</button>
+  <button onclick="go('s3')"><i class="ti ti-notebook" aria-hidden="true"></i> Full essay</button>
+</div>
+
+<div class="wl-main">
+  <div class="xp-bar">
+    <span class="xp-label"><i class="ti ti-star" style="color:var(--lib-gold);font-size:15px;vertical-align:-1px" aria-hidden="true"></i> Writing XP</span>
+    <div class="xp-track"><div class="xp-fill" id="xpFill"></div></div>
+    <span class="xp-pts" id="xpPts">0 XP</span>
+  </div>
+
+  <div class="wl-section active" id="s1">
+    <h2 class="sec-head">Connector practice</h2>
+    <p class="sec-desc">Choose a connector type, study the examples, then practise using them in your own writing. Hit "get feedback" to see how you did.</p>
+    <div class="conn-tabs" id="cTabs"></div>
+    <div id="cContent"></div>
+  </div>
+
+  <div class="wl-section" id="s2">
+    <h2 class="sec-head">Paragraph practice</h2>
+    <p class="sec-desc">Practise writing each part of an essay separately. A random topic is generated for you — write the paragraph type shown, then get detailed feedback.</p>
+    <div id="paraContent"></div>
+  </div>
+
+  <div class="wl-section" id="s3">
+    <h2 class="sec-head">Full essay practice</h2>
+    <p class="sec-desc">Write a complete essay of 200–400 words on the topic below. When you're done, get full feedback on your writing.</p>
+    <div id="essayContent"></div>
+  </div>
+</div>
+
+<script>
+// Powered by Puter.js — no API key needed!
+
+let xp = 0;
+function addXP(n) {
+  xp += n;
+  document.getElementById('xpPts').textContent = xp + ' XP';
+  document.getElementById('xpFill').style.width = Math.min(100, (xp / 500) * 100) + '%';
+}
+
+function go(id) {
+  document.querySelectorAll('.wl-section').forEach(s => s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  const btns = document.querySelectorAll('.wl-nav button');
+  const idx = id === 's1' ? 0 : id === 's2' ? 1 : 2;
+  btns.forEach((b, i) => b.classList.toggle('active', i === idx));
+}
+
+function wc(id, wcId) {
+  const v = document.getElementById(id)?.value || '';
+  const n = v.trim() ? v.trim().split(/\s+/).length : 0;
+  document.getElementById(wcId).textContent = n + ' word' + (n !== 1 ? 's' : '');
+}
+
+const FEEDBACK_SYSTEM = `You are a supportive English teacher for secondary school students (ages 12-16). Give clear, structured feedback using these headings (use the emoji exactly):
+
+📝 Spelling: list any misspelled words with corrections
+📐 Grammar: note grammatical errors with corrected versions
+✏️ Punctuation: flag punctuation mistakes
+🔗 Connectors & cohesion: comment on their use of linking words and how ideas flow together
+🎯 Coherence: does the writing make sense and stay on topic?
+📚 Vocabulary: suggest more varied or academic word choices where possible
+⭐ Strength: one thing they did well
+💡 Suggestion: one specific tip to improve
+
+If a category has no issues, write "Well done — no issues here!"
+Keep language simple, warm and encouraging. Max 250 words total.`;
+
+async function getFB(text, taskDesc, fbId) {
+  if (!text.trim()) { alert('Please write something first!'); return; }
+  const el = document.getElementById(fbId);
+  el.innerHTML = '<div class="fb loading">Reading your writing...</div>';
+
+  const prompt = FEEDBACK_SYSTEM + '\n\n' + taskDesc + '\n\nStudent wrote:\n"' + text + '"';
+  try {
+    const response = await puter.ai.chat(prompt, { model: 'claude-sonnet-4-6' });
+    const t = response?.message?.content?.[0]?.text || response?.toString() || 'Could not get feedback.';
+    el.innerHTML = '<div class="fb">' + t.replace(/\n/g, '<br>') + '</div>';
+    addXP(10);
+  } catch(e) {
+    el.innerHTML = '<div class="fb loading">Something went wrong. Please try again. (' + e.message + ')</div>';
+  }
+}
+
+// === CONNECTORS ===
+const CONN = {
+  addition: { label: "Addition", words: ["Furthermore", "In addition", "Moreover", "Besides", "Also"], tip: "Use these to add more information or reinforce a point.", prompt: "Write 2–3 sentences about the benefits of reading books. Use at least one addition connector." },
+  contrast: { label: "Contrast", words: ["However", "Nevertheless", "On the other hand", "Although", "Despite"], tip: "Use these to show an opposing or unexpected idea.", prompt: "Write 2–3 sentences about social media — mention both a positive and a negative side." },
+  cause: { label: "Cause & effect", words: ["Therefore", "As a result", "Consequently", "Because of this", "This leads to"], tip: "Use these to explain why something happens or what results from it.", prompt: "Write 2–3 sentences explaining why sleep is important for teenagers." },
+  time: { label: "Time", words: ["Meanwhile", "Subsequently", "At the same time", "Before long", "Eventually"], tip: "Use these to show when things happen in relation to each other.", prompt: "Write 2–3 sentences describing what happens when someone moves to a new school." },
+  sequence: { label: "Sequence", words: ["First of all", "Secondly", "Then", "After that", "Finally"], tip: "Use these to list ideas or steps in order.", prompt: "Write 3–4 sentences describing the steps to resolve a conflict with a friend." },
+  example: { label: "Example", words: ["For instance", "For example", "Such as", "To illustrate", "In particular"], tip: "Use these to give a specific example that supports your point.", prompt: "Write 2–3 sentences about how peer pressure affects teenagers." },
+  emphasis: { label: "Emphasis", words: ["Above all", "Indeed", "In fact", "Clearly", "It is worth noting that"], tip: "Use these to highlight your most important point.", prompt: "Write 2–3 sentences arguing why education is important." },
+  conclusion: { label: "Conclusion", words: ["In conclusion", "To sum up", "Overall", "All things considered", "Ultimately"], tip: "Use these to wrap up your argument or summarise your ideas.", prompt: "Write 2–3 sentences concluding an argument about whether phones should be allowed in school." }
+};
+
+const EXTRA_PROMPTS = [
+  "Write about the importance of exercise for teenagers.",
+  "Write about the challenges of learning a new language.",
+  "Write about what makes a good friend.",
+  "Write about the effects of climate change on daily life.",
+  "Write about whether homework is helpful or harmful.",
+  "Write about why teamwork matters.",
+  "Write about the pros and cons of online learning.",
+  "Write about what makes a good leader."
+];
+
+let curConn = 'addition';
+function buildConn() {
+  const tabs = document.getElementById('cTabs');
+  Object.entries(CONN).forEach(([k, v]) => {
+    const b = document.createElement('button');
+    b.className = 'ct' + (k === curConn ? ' active' : '');
+    b.textContent = v.label;
+    b.onclick = () => { curConn = k; document.querySelectorAll('.ct').forEach((x, i) => x.classList.toggle('active', Object.keys(CONN)[i] === k)); renderConn(k); };
+    tabs.appendChild(b);
+  });
+  renderConn(curConn);
+}
+
+function renderConn(k) {
+  const c = CONN[k];
+  document.getElementById('cContent').innerHTML = `
+    <div class="card">
+      <h3><i class="ti ti-link" style="font-size:14px;vertical-align:-1px" aria-hidden="true"></i> ${c.label} connectors</h3>
+      <p class="card-tip">${c.tip}</p>
+      <div class="chips">${c.words.map(w => '<span class="chip">' + w + '</span>').join('')}</div>
+      <div class="prompt"><strong>Your task:</strong> ${c.prompt}</div>
+      <textarea id="cIn" placeholder="Write your sentences here..." rows="4" oninput="wc('cIn','cWC')"></textarea>
+      <div class="wc" id="cWC">0 words</div>
+      <div class="btn-row">
+        <button class="btn btn-primary" onclick="getFB(document.getElementById('cIn').value, 'The student was asked to practise using ${c.label} connectors (${c.words.join(", ")}). The task: ${c.prompt.replace(/'/g, "\\'")}', 'cFB')"><i class="ti ti-sparkles" aria-hidden="true"></i> Get feedback</button>
+        <button class="btn btn-outline" onclick="newConnPrompt('${k}')"><i class="ti ti-refresh" aria-hidden="true"></i> New prompt</button>
+      </div>
+      <div id="cFB"></div>
+    </div>`;
+}
+
+function newConnPrompt(k) {
+  const c = CONN[k];
+  const p = EXTRA_PROMPTS[Math.floor(Math.random() * EXTRA_PROMPTS.length)];
+  CONN[k].prompt = p + ' Use at least one ' + c.label.toLowerCase() + ' connector.';
+  renderConn(k);
+}
+
+// === PARAGRAPHS ===
+const PARA_TOPICS = [
+  "Should school uniforms be compulsory?",
+  "Is social media harmful for young people?",
+  "Should homework be banned?",
+  "Is it important to learn a second language?",
+  "Should junk food be banned in schools?",
+  "Are video games good or bad for teenagers?",
+  "Should the voting age be lowered to 16?",
+  "Is climate change the most important issue of our time?"
+];
+
+const PARA_TYPES = [
+  { id: "intro", label: "Introduction", icon: "ti-flag", desc: "State the topic and your main opinion clearly. Set up what the essay will discuss. Aim for 3–5 sentences.", task: "Write an introduction paragraph for an essay on the topic" },
+  { id: "for", label: "Arguments for", icon: "ti-thumb-up", desc: "Give 2 reasons that support the topic. Use examples and connectors. Aim for 4–6 sentences.", task: "Write a paragraph with arguments FOR the topic" },
+  { id: "against", label: "Arguments against", icon: "ti-thumb-down", desc: "Give 2 reasons against the topic. Acknowledge the other side fairly. Aim for 4–6 sentences.", task: "Write a paragraph with arguments AGAINST the topic" },
+  { id: "concl", label: "Conclusion", icon: "ti-flag", desc: "Summarise the key points and restate your opinion. Leave the reader with a final thought. Aim for 3–4 sentences.", task: "Write a conclusion paragraph for an essay on the topic" }
+];
+
+let paraTopic = {};
+function buildPara() {
+  let html = '';
+  PARA_TYPES.forEach(pt => {
+    const t = PARA_TOPICS[Math.floor(Math.random() * PARA_TOPICS.length)];
+    paraTopic[pt.id] = t;
+    html += `
+    <div class="card essay-part">
+      <h3><i class="${pt.icon}" style="font-size:14px;vertical-align:-1px;margin-right:4px" aria-hidden="true"></i> ${pt.label}</h3>
+      <p>${pt.desc}</p>
+      <div class="prompt"><strong>Topic:</strong> <em id="paraTopic_${pt.id}">${t}</em></div>
+      <textarea id="pIn_${pt.id}" placeholder="Write your ${pt.label.toLowerCase()} here..." rows="5" oninput="wc('pIn_${pt.id}','pWC_${pt.id}')"></textarea>
+      <div class="wc" id="pWC_${pt.id}">0 words</div>
+      <div class="btn-row">
+        <button class="btn btn-primary" onclick="paraFB('${pt.id}','${pt.task}')"><i class="ti ti-sparkles" aria-hidden="true"></i> Get feedback</button>
+        <button class="btn btn-outline" onclick="newParaTopic('${pt.id}')"><i class="ti ti-refresh" aria-hidden="true"></i> New topic</button>
+      </div>
+      <div id="pFB_${pt.id}"></div>
+    </div>`;
+  });
+  document.getElementById('paraContent').innerHTML = html;
+}
+
+function newParaTopic(id) {
+  const t = PARA_TOPICS[Math.floor(Math.random() * PARA_TOPICS.length)];
+  paraTopic[id] = t;
+  document.getElementById('paraTopic_' + id).textContent = t;
+  document.getElementById('pIn_' + id).value = '';
+  document.getElementById('pWC_' + id).textContent = '0 words';
+  document.getElementById('pFB_' + id).innerHTML = '';
+}
+
+function paraFB(id, task) {
+  const text = document.getElementById('pIn_' + id).value;
+  const topic = paraTopic[id];
+  getFB(text, task + ': "' + topic + '"', 'pFB_' + id);
+}
+
+// === FULL ESSAY ===
+let essayTopic = '';
+function buildEssay() {
+  essayTopic = PARA_TOPICS[Math.floor(Math.random() * PARA_TOPICS.length)];
+  document.getElementById('essayContent').innerHTML = `
+    <div class="card">
+      <div class="prompt"><strong>Your topic:</strong> <em id="eTopic">${essayTopic}</em></div>
+      <p class="card-tip" style="margin-top:0.75rem">Write a full essay with an introduction, arguments for, arguments against, and a conclusion. Aim for 200–400 words.</p>
+      <textarea id="eIn" placeholder="Write your full essay here..." rows="14" oninput="wc('eIn','eWC')"></textarea>
+      <div class="wc" id="eWC">0 words</div>
+      <div class="btn-row">
+        <button class="btn btn-primary" onclick="essayFB()"><i class="ti ti-sparkles" aria-hidden="true"></i> Get feedback</button>
+        <button class="btn btn-outline" onclick="newEssayTopic()"><i class="ti ti-refresh" aria-hidden="true"></i> New topic</button>
+      </div>
+      <div id="eFB"></div>
+    </div>`;
+}
+
+function newEssayTopic() {
+  essayTopic = PARA_TOPICS[Math.floor(Math.random() * PARA_TOPICS.length)];
+  document.getElementById('eTopic').textContent = essayTopic;
+  document.getElementById('eIn').value = '';
+  document.getElementById('eWC').textContent = '0 words';
+  document.getElementById('eFB').innerHTML = '';
+}
+
+function essayFB() {
+  const text = document.getElementById('eIn').value;
+  const wordCount = text.trim() ? text.trim().split(/\s+/).length : 0;
+  let extra = '';
+  if (wordCount < 200) extra = ' Note: the student wrote fewer than 200 words — encourage them to develop their ideas further.';
+  if (wordCount > 400) extra = ' Note: the student wrote more than 400 words — suggest being more concise.';
+  getFB(text, 'The student was asked to write a full essay (200–400 words) on: "' + essayTopic + '". The essay should include an introduction, arguments for, arguments against, and a conclusion.' + extra + ' Give comprehensive feedback covering all categories. Also comment on the overall structure: does it have all four parts? Does the argument flow logically from introduction to conclusion?', 'eFB');
+}
+
+buildConn();
+buildPara();
+buildEssay();
+</script>
+</body>
+</html>
