@@ -1,0 +1,780 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Writing Lab</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css">
+<script src="https://js.puter.com/v2/"></script>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Libre+Baskerville:wght@400;700&family=Source+Sans+3:wght@300;400;500;600&display=swap');
+:root {
+  --bg: #faf8f4; --card: #fff; --ink: #2c2420; --muted: #7a6e62;
+  --border: #e0d8cd; --accent: #b44a2f; --gold: #c9952a; --sage: #3d7a5f;
+  --parchment: #f3efe7; --radius: 10px;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: 'Source Sans 3', sans-serif; background: var(--bg); color: var(--ink); min-height: 100vh; }
+
+/* LOGIN */
+.login-wrap {
+  min-height: 100vh; display: flex; align-items: center; justify-content: center;
+  background: linear-gradient(135deg, #2c2420, #3d332c);
+  padding: 2rem;
+}
+.login-box {
+  background: var(--card); border-radius: 16px; padding: 2.5rem 2rem;
+  width: 100%; max-width: 420px; box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+}
+.login-title {
+  font-family: 'Libre Baskerville', serif; font-size: 2rem; color: var(--ink);
+  text-align: center; margin-bottom: 0.3rem;
+}
+.login-sub { text-align: center; color: var(--muted); font-size: 0.85rem; margin-bottom: 2rem; }
+.login-tabs { display: flex; background: var(--parchment); border-radius: 8px; padding: 4px; margin-bottom: 1.5rem; }
+.login-tab {
+  flex: 1; padding: 0.5rem; text-align: center; font-size: 0.85rem; font-weight: 600;
+  border-radius: 6px; cursor: pointer; border: none; background: none;
+  font-family: 'Source Sans 3', sans-serif; color: var(--muted); transition: all 0.2s;
+}
+.login-tab.active { background: var(--card); color: var(--accent); box-shadow: 0 1px 4px rgba(0,0,0,0.1); }
+.form-group { margin-bottom: 1rem; }
+.form-label { font-size: 0.8rem; font-weight: 600; color: var(--muted); display: block; margin-bottom: 0.4rem; text-transform: uppercase; letter-spacing: 0.5px; }
+.form-input {
+  width: 100%; border: 1.5px solid var(--border); border-radius: 8px;
+  padding: 0.7rem 1rem; font-family: 'Source Sans 3', sans-serif;
+  font-size: 0.92rem; color: var(--ink); background: #fff; outline: none; transition: border-color 0.2s;
+}
+.form-input:focus { border-color: var(--accent); }
+.form-select { appearance: none; cursor: pointer; }
+.btn-full {
+  width: 100%; background: var(--accent); color: #fff; border: none;
+  border-radius: 8px; padding: 0.8rem; font-family: 'Source Sans 3', sans-serif;
+  font-size: 0.95rem; font-weight: 600; cursor: pointer; transition: all 0.2s; margin-top: 0.5rem;
+}
+.btn-full:hover { background: #a03e25; }
+.login-err { color: #c0392b; font-size: 0.83rem; margin-top: 0.75rem; text-align: center; min-height: 1.2rem; }
+
+/* HEADER */
+.wl-header {
+  background: linear-gradient(135deg, #2c2420, #3d332c);
+  padding: 1.5rem 2rem; border-bottom: 4px solid var(--gold);
+  display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 1rem;
+}
+.wl-title-wrap { text-align: center; flex: 1; }
+.wl-title { font-family: 'Libre Baskerville', serif; font-size: 2.4rem; color: #f3efe7; }
+.wl-subtitle { font-size: 0.75rem; color: #a89a8a; letter-spacing: 2px; text-transform: uppercase; margin-top: 0.2rem; }
+.user-pill {
+  background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2);
+  border-radius: 20px; padding: 0.4rem 1rem; color: #f3efe7;
+  font-size: 0.82rem; display: flex; align-items: center; gap: 0.5rem; cursor: pointer;
+  transition: background 0.2s;
+}
+.user-pill:hover { background: rgba(255,255,255,0.2); }
+
+/* NAV */
+.wl-nav { display: flex; background: #352e28; padding: 0 1.5rem; overflow-x: auto; }
+.wl-nav button {
+  background: none; border: none; color: #8a7d70; padding: 0.85rem 1.2rem;
+  cursor: pointer; font-family: 'Source Sans 3', sans-serif; font-size: 0.85rem;
+  font-weight: 500; white-space: nowrap; border-bottom: 3px solid transparent;
+  transition: all 0.2s; display: flex; align-items: center; gap: 0.4rem;
+}
+.wl-nav button:hover { color: #e0d8cd; }
+.wl-nav button.active { color: var(--gold); border-bottom-color: var(--gold); }
+
+/* XP BAR */
+.xp-bar {
+  display: flex; align-items: center; gap: 0.75rem;
+  padding: 0.65rem 1.25rem; background: var(--parchment);
+  border: 1px solid var(--border); border-radius: 8px; margin-bottom: 1.5rem;
+}
+.xp-label { font-size: 0.75rem; font-weight: 600; color: var(--muted); text-transform: uppercase; letter-spacing: 1px; white-space: nowrap; }
+.xp-track { flex: 1; height: 10px; background: var(--border); border-radius: 5px; overflow: hidden; }
+.xp-fill { height: 100%; background: var(--gold); border-radius: 5px; transition: width 0.5s; }
+.xp-pts { font-size: 0.85rem; font-weight: 600; color: var(--gold); white-space: nowrap; }
+.level-badge {
+  background: var(--accent); color: #fff; font-size: 0.7rem; font-weight: 700;
+  padding: 2px 8px; border-radius: 10px; white-space: nowrap; letter-spacing: 0.5px;
+}
+
+/* MAIN */
+.wl-main { padding: 2rem; max-width: 880px; margin: 0 auto; }
+.wl-section { display: none; }
+.wl-section.active { display: block; }
+.sec-head { font-family: 'Libre Baskerville', serif; font-size: 1.5rem; margin-bottom: 0.4rem; }
+.sec-desc { color: var(--muted); font-size: 0.88rem; margin-bottom: 1.75rem; line-height: 1.6; }
+
+/* CARDS */
+.card { background: var(--card); border: 1px solid var(--border); border-radius: var(--radius); padding: 1.4rem 1.5rem; margin-bottom: 1.25rem; }
+.card h3 { font-size: 0.72rem; text-transform: uppercase; letter-spacing: 1.5px; color: var(--accent); font-weight: 600; margin-bottom: 0.75rem; }
+.card-tip { font-size: 0.85rem; color: var(--muted); margin-bottom: 0.75rem; line-height: 1.5; }
+.chips { display: flex; flex-wrap: wrap; gap: 0.4rem; margin-bottom: 1rem; }
+.chip { background: var(--parchment); border: 1px solid var(--border); border-radius: 6px; padding: 0.25rem 0.65rem; font-size: 0.84rem; font-weight: 500; color: var(--sage); }
+.prompt { background: var(--parchment); border-left: 4px solid var(--gold); padding: 0.85rem 1.1rem; border-radius: 0 8px 8px 0; margin-bottom: 1rem; font-size: 0.88rem; line-height: 1.6; color: #555; }
+.prompt strong { color: var(--ink); }
+textarea { width: 100%; border: 1.5px solid var(--border); border-radius: 8px; padding: 0.85rem 1rem; font-family: 'Source Sans 3', sans-serif; font-size: 0.9rem; line-height: 1.7; color: var(--ink); background: #fff; resize: vertical; min-height: 90px; transition: border-color 0.2s; outline: none; }
+textarea:focus { border-color: var(--accent); }
+.wc { font-size: 0.75rem; color: #aaa; margin-top: 0.3rem; text-align: right; }
+.conn-tabs { display: flex; flex-wrap: wrap; gap: 0.45rem; margin-bottom: 1.5rem; }
+.ct { background: var(--parchment); border: 1.5px solid var(--border); border-radius: 20px; padding: 0.35rem 0.9rem; font-size: 0.8rem; font-weight: 600; cursor: pointer; transition: all 0.2s; font-family: 'Source Sans 3', sans-serif; color: var(--ink); }
+.ct:hover { border-color: var(--accent); color: var(--accent); }
+.ct.active { background: var(--accent); border-color: var(--accent); color: #fff; }
+
+/* BUTTONS */
+.btn-row { display: flex; gap: 0.6rem; flex-wrap: wrap; margin-top: 0.6rem; }
+.btn { border: none; border-radius: 8px; padding: 0.6rem 1.25rem; font-family: 'Source Sans 3', sans-serif; font-size: 0.85rem; font-weight: 600; cursor: pointer; transition: all 0.15s; display: flex; align-items: center; gap: 0.4rem; }
+.btn-primary { background: var(--accent); color: #fff; }
+.btn-primary:hover { background: #a03e25; }
+.btn-outline { background: none; color: var(--accent); border: 1.5px solid var(--accent); }
+.btn-outline:hover { background: var(--accent); color: #fff; }
+
+/* FEEDBACK */
+.fb { margin-top: 1rem; background: #f0f8f3; border: 1px solid #b5d6c4; border-radius: var(--radius); padding: 1.1rem 1.3rem; font-size: 0.86rem; line-height: 1.8; color: #2d5a4a; }
+.fb.loading { color: #999; font-style: italic; background: var(--parchment); border-color: var(--border); }
+
+/* LEADERBOARD */
+.lb-filters { display: flex; gap: 0.5rem; margin-bottom: 1.25rem; flex-wrap: wrap; }
+.lb-filter { background: var(--parchment); border: 1.5px solid var(--border); border-radius: 20px; padding: 0.35rem 1rem; font-size: 0.8rem; font-weight: 600; cursor: pointer; font-family: 'Source Sans 3', sans-serif; color: var(--ink); transition: all 0.2s; }
+.lb-filter.active { background: var(--sage); border-color: var(--sage); color: #fff; }
+.lb-table { width: 100%; border-collapse: collapse; }
+.lb-table th { font-size: 0.75rem; text-transform: uppercase; letter-spacing: 1px; color: var(--muted); padding: 0.6rem 1rem; text-align: left; border-bottom: 2px solid var(--border); }
+.lb-table td { padding: 0.85rem 1rem; border-bottom: 1px solid var(--border); font-size: 0.88rem; }
+.lb-table tr:last-child td { border-bottom: none; }
+.lb-table tr.me td { background: #fef9ee; font-weight: 600; }
+.rank-1 { color: #c9952a; font-weight: 700; font-size: 1.1rem; }
+.rank-2 { color: #8a9ba8; font-weight: 700; }
+.rank-3 { color: #b87333; font-weight: 700; }
+.medal { font-size: 1.2rem; }
+
+/* ADMIN */
+.admin-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 1rem; margin-bottom: 1.5rem; }
+.stat-card { background: var(--card); border: 1px solid var(--border); border-radius: var(--radius); padding: 1.2rem; text-align: center; }
+.stat-num { font-family: 'Libre Baskerville', serif; font-size: 2rem; color: var(--accent); }
+.stat-label { font-size: 0.78rem; color: var(--muted); text-transform: uppercase; letter-spacing: 1px; margin-top: 0.25rem; }
+.student-row { display: flex; align-items: center; gap: 1rem; padding: 0.85rem 1rem; border-bottom: 1px solid var(--border); font-size: 0.88rem; cursor: pointer; transition: background 0.15s; }
+.student-row:hover { background: var(--parchment); }
+.student-row:last-child { border-bottom: none; }
+.student-avatar { width: 36px; height: 36px; border-radius: 50%; background: var(--accent); color: #fff; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 0.9rem; flex-shrink: 0; }
+.student-name { font-weight: 600; flex: 1; }
+.student-class { color: var(--muted); font-size: 0.8rem; }
+.student-xp { color: var(--gold); font-weight: 700; }
+.history-entry { padding: 0.85rem 1rem; border-bottom: 1px solid var(--border); font-size: 0.84rem; }
+.history-entry:last-child { border-bottom: none; }
+.history-type { font-weight: 600; color: var(--accent); font-size: 0.75rem; text-transform: uppercase; letter-spacing: 1px; }
+.history-text { color: var(--muted); margin-top: 0.2rem; line-height: 1.5; overflow: hidden; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; }
+.history-date { font-size: 0.75rem; color: #bbb; margin-top: 0.2rem; }
+.modal-overlay { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.5); z-index: 100; display: flex; align-items: center; justify-content: center; padding: 1rem; }
+.modal { background: var(--card); border-radius: 16px; padding: 2rem; max-width: 600px; width: 100%; max-height: 80vh; overflow-y: auto; }
+.modal h2 { font-family: 'Libre Baskerville', serif; font-size: 1.3rem; margin-bottom: 1rem; }
+.close-btn { float: right; background: var(--parchment); border: none; border-radius: 6px; padding: 0.3rem 0.7rem; cursor: pointer; font-size: 0.85rem; }
+.xp-badge { display: inline-block; background: var(--parchment); border: 1px solid var(--border); border-radius: 6px; padding: 0.2rem 0.6rem; font-size: 0.75rem; font-weight: 600; color: var(--gold); }
+.toast { position: fixed; bottom: 2rem; right: 2rem; background: var(--sage); color: #fff; padding: 0.75rem 1.25rem; border-radius: 10px; font-size: 0.88rem; font-weight: 500; z-index: 200; opacity: 0; transform: translateY(10px); transition: all 0.3s; pointer-events: none; }
+.toast.show { opacity: 1; transform: translateY(0); }
+</style>
+</head>
+<body>
+
+<!-- TOAST -->
+<div class="toast" id="toast"></div>
+
+<!-- LOGIN SCREEN -->
+<div id="loginScreen" class="login-wrap">
+  <div class="login-box">
+    <div class="login-title">✍️ The Writing Lab</div>
+    <div class="login-sub">Practice makes progress</div>
+    <div class="login-tabs">
+      <button class="login-tab active" onclick="switchTab('login')">Log in</button>
+      <button class="login-tab" onclick="switchTab('register')">Sign up</button>
+    </div>
+    <div id="loginForm">
+      <div class="form-group">
+        <label class="form-label">Nickname</label>
+        <input class="form-input" id="loginNick" placeholder="Your nickname" autocomplete="username">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Password</label>
+        <input class="form-input" type="password" id="loginPass" placeholder="Your password" autocomplete="current-password" onkeydown="if(event.key==='Enter')doLogin()">
+      </div>
+      <button class="btn-full" onclick="doLogin()">Log in</button>
+    </div>
+    <div id="registerForm" style="display:none">
+      <div class="form-group">
+        <label class="form-label">Choose a nickname</label>
+        <input class="form-input" id="regNick" placeholder="e.g. BookWorm42">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Class</label>
+        <select class="form-input form-select" id="regClass">
+          <option value="">Select your class...</option>
+          <option>MYP1A</option><option>MYP1B</option>
+          <option>MYP2A</option><option>MYP2B</option>
+          <option>MYP3A</option><option>MYP3B</option>
+          <option>MYP4A</option><option>MYP4B</option>
+          <option>MYP5A</option><option>MYP5B</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Password</label>
+        <input class="form-input" type="password" id="regPass" placeholder="Choose a password">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Confirm Password</label>
+        <input class="form-input" type="password" id="regPass2" placeholder="Repeat password" onkeydown="if(event.key==='Enter')doRegister()">
+      </div>
+      <button class="btn-full" onclick="doRegister()">Create account</button>
+    </div>
+    <div class="login-err" id="loginErr"></div>
+    <div style="text-align:center;margin-top:1.25rem;font-size:0.78rem;color:#bbb;">
+      Admin? Use your admin credentials to log in.
+    </div>
+  </div>
+</div>
+
+<!-- MAIN APP -->
+<div id="appScreen" style="display:none">
+  <div class="wl-header">
+    <div style="width:120px"></div>
+    <div class="wl-title-wrap">
+      <div class="wl-title">✍️ The Writing Lab</div>
+      <div class="wl-subtitle">Practice makes progress</div>
+    </div>
+    <div style="display:flex;align-items:center;gap:0.5rem;">
+      <div class="user-pill" onclick="doLogout()">
+        <i class="ti ti-user-circle"></i>
+        <span id="headerNick">—</span>
+        <i class="ti ti-logout" style="font-size:13px;opacity:0.6"></i>
+      </div>
+    </div>
+  </div>
+
+  <div class="wl-nav" id="mainNav">
+    <button class="active" onclick="go('s1')"><i class="ti ti-link"></i> Connectors</button>
+    <button onclick="go('s2')"><i class="ti ti-align-left"></i> Paragraphs</button>
+    <button onclick="go('s3')"><i class="ti ti-notebook"></i> Full Essay</button>
+    <button onclick="go('s4')"><i class="ti ti-trophy"></i> Leaderboard</button>
+    <button id="adminNavBtn" style="display:none" onclick="go('s5')"><i class="ti ti-shield"></i> Admin</button>
+  </div>
+
+  <div class="wl-main">
+    <div class="xp-bar">
+      <span class="xp-label">⭐ Writing XP</span>
+      <div class="xp-track"><div class="xp-fill" id="xpFill" style="width:0%"></div></div>
+      <span class="level-badge" id="levelBadge">Apprentice</span>
+      <span class="xp-pts" id="xpPts">0 XP</span>
+    </div>
+
+    <!-- CONNECTORS -->
+    <div class="wl-section active" id="s1">
+      <h2 class="sec-head">Connector Practice</h2>
+      <p class="sec-desc">Choose a connector type, study the examples, then write your own sentences. Get AI feedback on how well you used them.</p>
+      <div class="conn-tabs" id="cTabs"></div>
+      <div id="cContent"></div>
+    </div>
+
+    <!-- PARAGRAPHS -->
+    <div class="wl-section" id="s2">
+      <h2 class="sec-head">Paragraph Practice</h2>
+      <p class="sec-desc">Practise writing each part of an essay separately. A random topic is generated — write the paragraph, then get detailed feedback.</p>
+      <div id="paraContent"></div>
+    </div>
+
+    <!-- ESSAY -->
+    <div class="wl-section" id="s3">
+      <h2 class="sec-head">Full Essay Practice</h2>
+      <p class="sec-desc">Write a complete essay of 200–400 words. Get comprehensive feedback on all aspects of your writing.</p>
+      <div id="essayContent"></div>
+    </div>
+
+    <!-- LEADERBOARD -->
+    <div class="wl-section" id="s4">
+      <h2 class="sec-head">🏆 Leaderboard</h2>
+      <p class="sec-desc">See how you rank against your classmates and the whole school. Keep practising to climb the ranks!</p>
+      <div class="lb-filters">
+        <button class="lb-filter active" onclick="loadLeaderboard('school',this)">🌍 Whole School</button>
+        <button class="lb-filter" onclick="loadLeaderboard('class',this)">🏫 My Class</button>
+      </div>
+      <div class="card" id="lbContent" style="padding:0;overflow:hidden">
+        <div style="padding:2rem;text-align:center;color:var(--muted)">Loading leaderboard...</div>
+      </div>
+    </div>
+
+    <!-- ADMIN -->
+    <div class="wl-section" id="s5">
+      <h2 class="sec-head">🛡️ Admin Dashboard</h2>
+      <p class="sec-desc">Manage all student accounts and view their writing history.</p>
+      <div class="admin-grid" id="adminStats"></div>
+      <div class="card" style="padding:0;overflow:hidden">
+        <div style="padding:1rem 1.5rem;border-bottom:1px solid var(--border);font-size:0.8rem;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:1px">All Students</div>
+        <div id="adminStudentList">
+          <div style="padding:2rem;text-align:center;color:var(--muted)">Loading students...</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- STUDENT DETAIL MODAL -->
+<div class="modal-overlay" id="studentModal" style="display:none" onclick="if(event.target===this)closeModal()">
+  <div class="modal">
+    <div id="modalContent"></div>
+  </div>
+</div>
+
+<script>
+// ====== CONFIG ======
+const ADMIN_USER = 'teacher';
+const ADMIN_PASS = 'writinglab2024';
+const STORAGE_KEY = 'writinglab_users';
+// ====================
+
+const LEVELS = [
+  { name: 'Apprentice', min: 0 },
+  { name: 'Writer', min: 100 },
+  { name: 'Scholar', min: 250 },
+  { name: 'Author', min: 500 },
+  { name: 'Master', min: 1000 }
+];
+
+const XP_VALUES = { connector: 10, paragraph: 20, essay: 50 };
+
+let currentUser = null;
+let allUsers = {};
+
+// ====== STORAGE HELPERS ======
+async function loadAllUsers() {
+  try {
+    const r = await puter.kv.get(STORAGE_KEY);
+    allUsers = r ? JSON.parse(r) : {};
+  } catch(e) { allUsers = {}; }
+}
+
+async function saveAllUsers() {
+  try { await puter.kv.set(STORAGE_KEY, JSON.stringify(allUsers)); } catch(e) {}
+}
+
+function getLevel(xp) {
+  let level = LEVELS[0];
+  for (const l of LEVELS) { if (xp >= l.min) level = l; }
+  return level;
+}
+
+function updateXPBar(xp) {
+  const lvl = getLevel(xp);
+  const nextLvl = LEVELS[LEVELS.indexOf(lvl) + 1];
+  const pct = nextLvl ? Math.min(100, ((xp - lvl.min) / (nextLvl.min - lvl.min)) * 100) : 100;
+  document.getElementById('xpFill').style.width = pct + '%';
+  document.getElementById('xpPts').textContent = xp + ' XP';
+  document.getElementById('levelBadge').textContent = lvl.name;
+}
+
+async function addXP(amount, taskType, writingText, feedbackText) {
+  if (!currentUser || currentUser === ADMIN_USER) return;
+  const u = allUsers[currentUser];
+  u.xp = (u.xp || 0) + amount;
+  u.exercisesCompleted = (u.exercisesCompleted || 0) + 1;
+  if (!u.history) u.history = [];
+  u.history.unshift({
+    type: taskType, text: writingText.slice(0, 200),
+    feedback: feedbackText.slice(0, 400), date: new Date().toISOString(), xp: amount
+  });
+  if (u.history.length > 50) u.history = u.history.slice(0, 50);
+  await saveAllUsers();
+  updateXPBar(u.xp);
+  showToast('+' + amount + ' XP! ' + getLevel(u.xp).name);
+}
+
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg; t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 2500);
+}
+
+// ====== AUTH ======
+function switchTab(tab) {
+  document.querySelectorAll('.login-tab').forEach((b, i) => b.classList.toggle('active', (tab === 'login' && i === 0) || (tab === 'register' && i === 1)));
+  document.getElementById('loginForm').style.display = tab === 'login' ? '' : 'none';
+  document.getElementById('registerForm').style.display = tab === 'register' ? '' : 'none';
+  document.getElementById('loginErr').textContent = '';
+}
+
+async function doLogin() {
+  const nick = document.getElementById('loginNick').value.trim();
+  const pass = document.getElementById('loginPass').value;
+  document.getElementById('loginErr').textContent = '';
+  if (!nick || !pass) { document.getElementById('loginErr').textContent = 'Please fill in all fields.'; return; }
+  await loadAllUsers();
+  if (nick === ADMIN_USER && pass === ADMIN_PASS) {
+    currentUser = ADMIN_USER; launchApp(true); return;
+  }
+  if (!allUsers[nick]) { document.getElementById('loginErr').textContent = 'Nickname not found. Did you mean to sign up?'; return; }
+  if (allUsers[nick].password !== btoa(pass)) { document.getElementById('loginErr').textContent = 'Incorrect password.'; return; }
+  currentUser = nick; launchApp(false);
+}
+
+async function doRegister() {
+  const nick = document.getElementById('regNick').value.trim();
+  const cls = document.getElementById('regClass').value;
+  const pass = document.getElementById('regPass').value;
+  const pass2 = document.getElementById('regPass2').value;
+  document.getElementById('loginErr').textContent = '';
+  if (!nick || !cls || !pass || !pass2) { document.getElementById('loginErr').textContent = 'Please fill in all fields.'; return; }
+  if (nick === ADMIN_USER) { document.getElementById('loginErr').textContent = 'That nickname is not allowed.'; return; }
+  if (pass !== pass2) { document.getElementById('loginErr').textContent = 'Passwords do not match.'; return; }
+  if (pass.length < 4) { document.getElementById('loginErr').textContent = 'Password must be at least 4 characters.'; return; }
+  await loadAllUsers();
+  if (allUsers[nick]) { document.getElementById('loginErr').textContent = 'That nickname is already taken.'; return; }
+  allUsers[nick] = { nickname: nick, class: cls, password: btoa(pass), xp: 0, exercisesCompleted: 0, history: [], joinedDate: new Date().toISOString() };
+  await saveAllUsers();
+  currentUser = nick; launchApp(false);
+}
+
+function launchApp(isAdmin) {
+  document.getElementById('loginScreen').style.display = 'none';
+  document.getElementById('appScreen').style.display = 'block';
+  document.getElementById('headerNick').textContent = currentUser;
+  if (isAdmin) {
+    document.getElementById('adminNavBtn').style.display = 'flex';
+    go('s5'); loadAdmin();
+  } else {
+    updateXPBar(allUsers[currentUser]?.xp || 0);
+    buildConn(); buildPara(); buildEssay();
+    go('s1');
+  }
+}
+
+function doLogout() {
+  currentUser = null;
+  document.getElementById('appScreen').style.display = 'none';
+  document.getElementById('loginScreen').style.display = 'flex';
+  document.getElementById('loginNick').value = '';
+  document.getElementById('loginPass').value = '';
+  document.getElementById('adminNavBtn').style.display = 'none';
+}
+
+// ====== NAV ======
+function go(id) {
+  document.querySelectorAll('.wl-section').forEach(s => s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  const ids = ['s1','s2','s3','s4','s5'];
+  document.querySelectorAll('.wl-nav button').forEach((b, i) => b.classList.toggle('active', ids[i] === id));
+  if (id === 's4') loadLeaderboard('school', document.querySelector('.lb-filter'));
+  if (id === 's5') loadAdmin();
+}
+
+function wc(id, wcId) {
+  const v = document.getElementById(id)?.value || '';
+  const n = v.trim() ? v.trim().split(/\s+/).length : 0;
+  const el = document.getElementById(wcId);
+  if (el) el.textContent = n + ' word' + (n !== 1 ? 's' : '');
+}
+
+// ====== FEEDBACK ======
+const FEEDBACK_SYSTEM = `You are a supportive English teacher for secondary school students (ages 12-16). Give clear, structured feedback using these headings (use the emoji exactly):
+
+📝 Spelling: List any misspelled words with the correct version. Format — "recieve → receive"
+
+📐 Grammar: Point out grammatical errors. Show original sentence and corrected version. Format — Original: "She go to school." → Corrected: "She goes to school."
+
+✏️ Punctuation: Flag punctuation mistakes and show a corrected example sentence.
+
+🔗 Connectors & cohesion: Comment on how ideas are linked. If weak or missing, show a rewritten example. Format — Original: "Social media is popular. It can be harmful." → Improved: "Although social media is popular, it can be harmful."
+
+🎯 Coherence: Say whether the writing makes sense and stays on topic. If not, give a short example of how to improve focus.
+
+📚 Vocabulary: Identify repeated or basic words and suggest better alternatives with an example sentence. Format — Instead of "good" try "beneficial" → "Exercise is beneficial for teenagers."
+
+⭐ Strength: Tell the student one specific thing they did well — quote a phrase from their writing if possible.
+
+💡 Suggestion: Give one clear, actionable tip AND always include a short example sentence showing exactly how to apply it.
+
+If a category has no issues, write "Well done — no issues here!"
+Always show examples. Keep language simple, warm and encouraging. Maximum 300 words total.`;
+
+async function getFB(text, taskDesc, fbId, taskType) {
+  if (!text.trim()) { alert('Please write something first!'); return; }
+  const el = document.getElementById(fbId);
+  el.innerHTML = '<div class="fb loading">✦ Reading your writing...</div>';
+  const prompt = FEEDBACK_SYSTEM + '\n\n' + taskDesc + '\n\nStudent wrote:\n"' + text + '"';
+  try {
+    const response = await puter.ai.chat(prompt, { model: 'claude-sonnet-4-6' });
+    const t = response?.message?.content?.[0]?.text || response?.toString() || 'Could not get feedback.';
+    el.innerHTML = '<div class="fb">' + t.replace(/\n/g, '<br>') + '</div>';
+    const xpAmt = XP_VALUES[taskType] || 10;
+    await addXP(xpAmt, taskType, text, t);
+  } catch(e) {
+    el.innerHTML = '<div class="fb loading">Something went wrong. Please try again.</div>';
+  }
+}
+
+// ====== CONNECTORS ======
+const CONN = {
+  addition: { label: "Addition", words: ["Furthermore","In addition","Moreover","Besides","Also"], tip: "Use these to add more information or reinforce a point.", prompt: "Write 2–3 sentences about the benefits of reading books. Use at least one addition connector." },
+  contrast: { label: "Contrast", words: ["However","Nevertheless","On the other hand","Although","Despite"], tip: "Use these to show an opposing or unexpected idea.", prompt: "Write 2–3 sentences about social media — mention both a positive and a negative side." },
+  cause: { label: "Cause & Effect", words: ["Therefore","As a result","Consequently","Because of this","This leads to"], tip: "Use these to explain why something happens or what results from it.", prompt: "Write 2–3 sentences explaining why sleep is important for teenagers." },
+  time: { label: "Time", words: ["Meanwhile","Subsequently","At the same time","Before long","Eventually"], tip: "Use these to show when things happen in relation to each other.", prompt: "Write 2–3 sentences describing what happens when someone moves to a new school." },
+  sequence: { label: "Sequence", words: ["First of all","Secondly","Then","After that","Finally"], tip: "Use these to list ideas or steps in order.", prompt: "Write 3–4 sentences describing the steps to resolve a conflict with a friend." },
+  example: { label: "Example", words: ["For instance","For example","Such as","To illustrate","In particular"], tip: "Use these to give a specific example that supports your point.", prompt: "Write 2–3 sentences about how peer pressure affects teenagers." },
+  emphasis: { label: "Emphasis", words: ["Above all","Indeed","In fact","Clearly","It is worth noting that"], tip: "Use these to highlight your most important point.", prompt: "Write 2–3 sentences arguing why education is important." },
+  conclusion: { label: "Conclusion", words: ["In conclusion","To sum up","Overall","All things considered","Ultimately"], tip: "Use these to wrap up your argument or summarise your ideas.", prompt: "Write 2–3 sentences concluding an argument about whether phones should be allowed in school." }
+};
+
+const EXTRA_PROMPTS = ["Write about the importance of exercise for teenagers.","Write about the challenges of learning a new language.","Write about what makes a good friend.","Write about the effects of climate change on daily life.","Write about whether homework is helpful or harmful.","Write about why teamwork matters.","Write about the pros and cons of online learning.","Write about what makes a good leader."];
+
+let curConn = 'addition';
+function buildConn() {
+  const tabs = document.getElementById('cTabs');
+  tabs.innerHTML = '';
+  Object.entries(CONN).forEach(([k, v]) => {
+    const b = document.createElement('button');
+    b.className = 'ct' + (k === curConn ? ' active' : '');
+    b.textContent = v.label;
+    b.onclick = () => { curConn = k; document.querySelectorAll('.ct').forEach((x, i) => x.classList.toggle('active', Object.keys(CONN)[i] === k)); renderConn(k); };
+    tabs.appendChild(b);
+  });
+  renderConn(curConn);
+}
+
+function renderConn(k) {
+  const c = CONN[k];
+  const wList = c.words.join(', ').replace(/'/g, "\\'");
+  const pr = c.prompt.replace(/'/g, "\\'");
+  document.getElementById('cContent').innerHTML = `
+    <div class="card">
+      <h3>${c.label} connectors</h3>
+      <p class="card-tip">${c.tip}</p>
+      <div class="chips">${c.words.map(w => '<span class="chip">' + w + '</span>').join('')}</div>
+      <div class="prompt"><strong>Your task:</strong> ${c.prompt}</div>
+      <textarea id="cIn" placeholder="Write your sentences here..." rows="4" oninput="wc('cIn','cWC')"></textarea>
+      <div class="wc" id="cWC">0 words</div>
+      <div class="btn-row">
+        <button class="btn btn-primary" onclick="getFB(document.getElementById('cIn').value,'The student practised ${c.label} connectors (${wList}). Task: ${pr}','cFB','connector')">✦ Get Feedback</button>
+        <button class="btn btn-outline" onclick="newConnPrompt('${k}')">↻ New Prompt</button>
+      </div>
+      <div id="cFB"></div>
+    </div>`;
+}
+
+function newConnPrompt(k) {
+  CONN[k].prompt = EXTRA_PROMPTS[Math.floor(Math.random() * EXTRA_PROMPTS.length)] + ' Use at least one ' + CONN[k].label.toLowerCase() + ' connector.';
+  renderConn(k);
+}
+
+// ====== PARAGRAPHS ======
+const PARA_TOPICS = ["Should school uniforms be compulsory?","Is social media harmful for young people?","Should homework be banned?","Is it important to learn a second language?","Should junk food be banned in schools?","Are video games good or bad for teenagers?","Should the voting age be lowered to 16?","Is climate change the most important issue of our time?","Should animals be kept in zoos?","Is it better to live in a city or in the countryside?"];
+const PARA_TYPES = [
+  { id:"intro", label:"Introduction", desc:"State the topic and your main opinion clearly. Set up what the essay will discuss. Aim for 3–5 sentences.", task:"Write an introduction paragraph for an essay on the topic" },
+  { id:"for", label:"Arguments For", desc:"Give 2 reasons that support the topic. Use examples and connectors. Aim for 4–6 sentences.", task:"Write a paragraph with arguments FOR the topic" },
+  { id:"against", label:"Arguments Against", desc:"Give 2 reasons against the topic. Acknowledge the other side fairly. Aim for 4–6 sentences.", task:"Write a paragraph with arguments AGAINST the topic" },
+  { id:"concl", label:"Conclusion", desc:"Summarise the key points and restate your opinion. Leave the reader with a final thought. Aim for 3–4 sentences.", task:"Write a conclusion paragraph for an essay on the topic" }
+];
+let paraTopic = {};
+
+function buildPara() {
+  let html = '';
+  PARA_TYPES.forEach(pt => {
+    const t = PARA_TOPICS[Math.floor(Math.random() * PARA_TOPICS.length)];
+    paraTopic[pt.id] = t;
+    const task = pt.task.replace(/'/g, "\\'");
+    html += `<div class="card">
+      <h3>${pt.label}</h3>
+      <p class="card-tip">${pt.desc}</p>
+      <div class="prompt"><strong>Topic:</strong> <em id="pTopic_${pt.id}">${t}</em></div>
+      <textarea id="pIn_${pt.id}" placeholder="Write your ${pt.label.toLowerCase()} here..." rows="5" oninput="wc('pIn_${pt.id}','pWC_${pt.id}')"></textarea>
+      <div class="wc" id="pWC_${pt.id}">0 words</div>
+      <div class="btn-row">
+        <button class="btn btn-primary" onclick="paraFB('${pt.id}','${task}')">✦ Get Feedback</button>
+        <button class="btn btn-outline" onclick="newParaTopic('${pt.id}')">↻ New Topic</button>
+      </div>
+      <div id="pFB_${pt.id}"></div>
+    </div>`;
+  });
+  document.getElementById('paraContent').innerHTML = html;
+}
+
+function newParaTopic(id) {
+  const t = PARA_TOPICS[Math.floor(Math.random() * PARA_TOPICS.length)];
+  paraTopic[id] = t;
+  document.getElementById('pTopic_' + id).textContent = t;
+  document.getElementById('pIn_' + id).value = '';
+  document.getElementById('pWC_' + id).textContent = '0 words';
+  document.getElementById('pFB_' + id).innerHTML = '';
+}
+
+function paraFB(id, task) {
+  const text = document.getElementById('pIn_' + id).value;
+  getFB(text, task + ': "' + paraTopic[id] + '"', 'pFB_' + id, 'paragraph');
+}
+
+// ====== ESSAY ======
+let essayTopic = '';
+function buildEssay() {
+  essayTopic = PARA_TOPICS[Math.floor(Math.random() * PARA_TOPICS.length)];
+  document.getElementById('essayContent').innerHTML = `
+    <div class="card">
+      <div class="prompt"><strong>Your topic:</strong> <em id="eTopic">${essayTopic}</em></div>
+      <p class="card-tip" style="margin-top:0.75rem">Write a full essay with an introduction, arguments for, arguments against, and a conclusion. Aim for 200–400 words.</p>
+      <textarea id="eIn" placeholder="Write your full essay here..." rows="14" oninput="wc('eIn','eWC')"></textarea>
+      <div class="wc" id="eWC">0 words</div>
+      <div class="btn-row">
+        <button class="btn btn-primary" onclick="essayFB()">✦ Get Feedback</button>
+        <button class="btn btn-outline" onclick="newEssayTopic()">↻ New Topic</button>
+      </div>
+      <div id="eFB"></div>
+    </div>`;
+}
+
+function newEssayTopic() {
+  essayTopic = PARA_TOPICS[Math.floor(Math.random() * PARA_TOPICS.length)];
+  document.getElementById('eTopic').textContent = essayTopic;
+  document.getElementById('eIn').value = '';
+  document.getElementById('eWC').textContent = '0 words';
+  document.getElementById('eFB').innerHTML = '';
+}
+
+function essayFB() {
+  const text = document.getElementById('eIn').value;
+  const wc = text.trim() ? text.trim().split(/\s+/).length : 0;
+  let extra = wc < 200 ? ' Note: fewer than 200 words — encourage more development.' : wc > 400 ? ' Note: more than 400 words — suggest being more concise.' : '';
+  getFB(text, 'Full essay (200–400 words) on: "' + essayTopic + '". Should include intro, arguments for, against, conclusion.' + extra + ' Also comment on overall structure and logical flow.', 'eFB', 'essay');
+}
+
+// ====== LEADERBOARD ======
+async function loadLeaderboard(scope, btn) {
+  document.querySelectorAll('.lb-filter').forEach(b => b.classList.remove('active'));
+  if (btn) btn.classList.add('active');
+  await loadAllUsers();
+  const userClass = allUsers[currentUser]?.class;
+  let users = Object.values(allUsers);
+  if (scope === 'class') users = users.filter(u => u.class === userClass);
+  users.sort((a, b) => (b.xp || 0) - (a.xp || 0));
+
+  if (users.length === 0) {
+    document.getElementById('lbContent').innerHTML = '<div style="padding:2rem;text-align:center;color:var(--muted)">No students found yet.</div>';
+    return;
+  }
+
+  const medals = ['🥇','🥈','🥉'];
+  let rows = users.map((u, i) => {
+    const isMe = u.nickname === currentUser;
+    const rank = i < 3 ? `<span class="medal">${medals[i]}</span>` : `<span style="color:var(--muted);font-weight:600">#${i+1}</span>`;
+    const lvl = getLevel(u.xp || 0).name;
+    return `<tr class="${isMe ? 'me' : ''}">
+      <td>${rank}</td>
+      <td><strong>${u.nickname}</strong>${isMe ? ' <span style="font-size:0.72rem;background:var(--accent);color:#fff;padding:1px 6px;border-radius:4px">YOU</span>' : ''}</td>
+      <td style="color:var(--muted);font-size:0.82rem">${u.class || '—'}</td>
+      <td><span style="color:var(--gold);font-weight:700">${u.xp || 0} XP</span></td>
+      <td style="font-size:0.8rem">${lvl}</td>
+      <td style="color:var(--muted)">${u.exercisesCompleted || 0}</td>
+    </tr>`;
+  }).join('');
+
+  document.getElementById('lbContent').innerHTML = `
+    <table class="lb-table">
+      <thead><tr>
+        <th>Rank</th><th>Student</th><th>Class</th><th>XP</th><th>Level</th><th>Exercises</th>
+      </tr></thead>
+      <tbody>${rows}</tbody>
+    </table>`;
+}
+
+// ====== ADMIN ======
+async function loadAdmin() {
+  await loadAllUsers();
+  const users = Object.values(allUsers);
+  const totalXP = users.reduce((s, u) => s + (u.xp || 0), 0);
+  const totalExercises = users.reduce((s, u) => s + (u.exercisesCompleted || 0), 0);
+
+  document.getElementById('adminStats').innerHTML = `
+    <div class="stat-card"><div class="stat-num">${users.length}</div><div class="stat-label">Students</div></div>
+    <div class="stat-card"><div class="stat-num">${totalExercises}</div><div class="stat-label">Exercises Done</div></div>
+    <div class="stat-card"><div class="stat-num">${totalXP}</div><div class="stat-label">Total XP Earned</div></div>
+    <div class="stat-card"><div class="stat-num">${users.length > 0 ? Math.round(totalXP/users.length) : 0}</div><div class="stat-label">Avg XP / Student</div></div>`;
+
+  if (users.length === 0) {
+    document.getElementById('adminStudentList').innerHTML = '<div style="padding:2rem;text-align:center;color:var(--muted)">No students have registered yet.</div>';
+    return;
+  }
+
+  users.sort((a, b) => (b.xp || 0) - (a.xp || 0));
+  document.getElementById('adminStudentList').innerHTML = users.map(u => `
+    <div class="student-row" onclick="showStudent('${u.nickname}')">
+      <div class="student-avatar">${u.nickname[0].toUpperCase()}</div>
+      <div style="flex:1">
+        <div class="student-name">${u.nickname}</div>
+        <div class="student-class">${u.class || '—'} · ${u.exercisesCompleted || 0} exercises · Joined ${new Date(u.joinedDate).toLocaleDateString()}</div>
+      </div>
+      <div class="student-xp">${u.xp || 0} XP</div>
+      <div style="color:var(--muted);font-size:0.8rem;margin-left:0.5rem">${getLevel(u.xp||0).name}</div>
+      <i class="ti ti-chevron-right" style="color:var(--muted);font-size:14px"></i>
+    </div>`).join('');
+}
+
+function showStudent(nick) {
+  const u = allUsers[nick];
+  if (!u) return;
+  const history = (u.history || []).slice(0, 20);
+  document.getElementById('modalContent').innerHTML = `
+    <button class="close-btn" onclick="closeModal()">✕ Close</button>
+    <h2>${u.nickname} <span class="xp-badge">${u.xp || 0} XP</span></h2>
+    <p style="color:var(--muted);font-size:0.85rem;margin-bottom:1.25rem">
+      Class: <strong>${u.class}</strong> · Level: <strong>${getLevel(u.xp||0).name}</strong> · 
+      Exercises: <strong>${u.exercisesCompleted || 0}</strong> · 
+      Joined: <strong>${new Date(u.joinedDate).toLocaleDateString()}</strong>
+    </p>
+
+    <div style="display:flex;gap:0.6rem;flex-wrap:wrap;margin-bottom:1.5rem;">
+      <button class="btn btn-outline" style="font-size:0.8rem;padding:0.45rem 1rem;" onclick="promptResetPassword('${nick}')">
+        <i class="ti ti-key"></i> Reset Password
+      </button>
+      <button class="btn" style="font-size:0.8rem;padding:0.45rem 1rem;background:#fee2e2;color:#b91c1c;border:1.5px solid #fca5a5;" onclick="promptDeleteStudent('${nick}')">
+        <i class="ti ti-trash"></i> Delete Account
+      </button>
+    </div>
+
+    <div id="adminActionMsg" style="min-height:1.5rem;font-size:0.84rem;margin-bottom:0.75rem;"></div>
+
+    <div style="font-size:0.8rem;font-weight:600;text-transform:uppercase;letter-spacing:1px;color:var(--muted);margin-bottom:0.75rem">Writing History</div>
+    ${history.length === 0 ? '<p style="color:var(--muted);font-size:0.88rem">No writing history yet.</p>' :
+      history.map(h => `
+        <div class="history-entry">
+          <div class="history-type">${h.type} · <span class="xp-badge">+${h.xp} XP</span> · ${new Date(h.date).toLocaleDateString()}</div>
+          <div class="history-text">${h.text}</div>
+        </div>`).join('')}`;
+  document.getElementById('studentModal').style.display = 'flex';
+}
+
+function promptResetPassword(nick) {
+  const newPass = prompt(`Set a new password for "${nick}":`);
+  if (!newPass) return;
+  if (newPass.length < 4) { alert('Password must be at least 4 characters.'); return; }
+  resetPassword(nick, newPass);
+}
+
+async function resetPassword(nick, newPass) {
+  allUsers[nick].password = btoa(newPass);
+  await saveAllUsers();
+  const msg = document.getElementById('adminActionMsg');
+  if (msg) { msg.style.color = 'var(--sage)'; msg.textContent = `✓ Password for "${nick}" has been reset successfully.`; }
+  showToast('Password reset for ' + nick);
+}
+
+function promptDeleteStudent(nick) {
+  const confirmed = confirm(`Are you sure you want to delete the account for "${nick}"?\n\nThis will permanently remove all their data and writing history.`);
+  if (confirmed) deleteStudent(nick);
+}
+
+async function deleteStudent(nick) {
+  delete allUsers[nick];
+  await saveAllUsers();
+  closeModal();
+  showToast(nick + '\'s account deleted');
+  loadAdmin();
+}
+
+function closeModal() {
+  document.getElementById('studentModal').style.display = 'none';
+}
+</script>
+</body>
+</html>
