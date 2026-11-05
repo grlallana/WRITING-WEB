@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>AI Quality Check</title>
+<style>
+  :root {
+    --ink: #2b2a27; --muted: #6f6a60; --parchment: #faf7f0; --card: #ffffff;
+    --border: #e3ddd1; --gold: #c99a2e; --rust: #a44a2a; --sage: #4a7c59;
+    --bg: #f4f0e6;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; background: var(--bg); color: var(--ink);
+    font: 15px/1.6 "Iowan Old Style", "Palatino Linotype", Georgia, serif;
+    padding: 1.5rem 16px 4rem;
+  }
+  .wrap { max-width: 1240px; margin: 0 auto; }
+  h1 { font-size: 1.5rem; margin: 0 0 0.25rem; }
+  .sub { color: var(--muted); font-size: 0.9rem; margin: 0 0 1.5rem; }
+  .card {
+    background: var(--card); border: 1px solid var(--border);
+    border-radius: 10px; padding: 1.1rem 1.2rem; margin-bottom: 1rem;
+  }
+  label { display: block; font-size: 0.78rem; text-transform: uppercase;
+          letter-spacing: 0.08em; color: var(--muted); margin-bottom: 0.3rem; font-weight: 600; }
+  input[type=text], textarea, select {
+    width: 100%; padding: 0.6rem 0.7rem; border: 1.5px solid var(--border);
+    border-radius: 7px; font: inherit; background: var(--parchment); color: var(--ink);
+  }
+  textarea { min-height: 150px; resize: vertical; line-height: 1.7; }
+  .row { display: flex; gap: 1rem; flex-wrap: wrap; }
+  .row > * { flex: 1 1 260px; }
+  .models { display: flex; gap: 1.1rem; flex-wrap: wrap; margin-top: 0.5rem; }
+  .models label { display: flex; align-items: center; gap: 0.4rem; text-transform: none;
+                  letter-spacing: 0; font-size: 0.92rem; color: var(--ink); font-weight: 400; margin: 0; }
+  button {
+    background: var(--rust); color: #fff; border: 0; border-radius: 7px;
+    padding: 0.7rem 1.4rem; font: inherit; font-weight: 600; cursor: pointer;
+  }
+  button:disabled { opacity: 0.5; cursor: default; }
+  button.ghost { background: transparent; color: var(--muted); border: 1.5px solid var(--border); }
+  .grid { display: grid; gap: 1rem; grid-template-columns: repeat(auto-fit, minmax(330px, 1fr)); }
+  .out h3 { margin: 0 0 0.2rem; font-size: 1rem; display: flex; justify-content: space-between; align-items: baseline; gap: 0.5rem; }
+  .meta { font-size: 0.76rem; color: var(--muted); font-weight: 400; font-family: ui-monospace, Menlo, monospace; }
+  .body { font-size: 0.9rem; white-space: pre-wrap; margin-top: 0.6rem;
+          border-top: 1px solid var(--border); padding-top: 0.6rem; max-height: 540px; overflow: auto; }
+  .err { color: var(--rust); }
+  .ok  { color: var(--sage); }
+  .hint { font-size: 0.84rem; color: var(--muted); margin-top: 0.5rem; }
+  code { background: var(--parchment); padding: 0.1rem 0.3rem; border-radius: 4px;
+         font-family: ui-monospace, Menlo, monospace; font-size: 0.86em; }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --ink: #ece7dc; --muted: #9c948a; --parchment: #26241f; --card: #2e2b25;
+      --border: #413d35; --bg: #1c1a16;
+    }
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>AI Quality Check</h1>
+  <p class="sub">Same student writing, same prompt, different models — so the choice is made on real work, not on a spec sheet.</p>
+
+  <div class="card">
+    <div class="row">
+      <div>
+        <label for="url">Worker URL</label>
+        <input type="text" id="url" placeholder="https://writing-lab-ai.YOURNAME.workers.dev">
+      </div>
+      <div>
+        <label for="tok">Shared token</label>
+        <input type="text" id="tok" placeholder="the SHARED_TOKEN you set in the Worker">
+      </div>
+    </div>
+    <p class="hint">Saved in this browser only, so you type them once.</p>
+  </div>
+
+  <div class="card">
+    <label for="type">Exercise type</label>
+    <select id="type">
+      <option value="connector">Connector practice</option>
+      <option value="paragraph">Paragraph</option>
+      <option value="essay">Essay</option>
+    </select>
+
+    <label for="task" style="margin-top:0.9rem">The task the student was set</label>
+    <input type="text" id="task" value="Write 2-3 sentences about why exercise matters. Use a cause &amp; effect connector.">
+
+    <label for="text" style="margin-top:0.9rem">What the student wrote</label>
+    <textarea id="text">Exersice matters because it helps the human body stay active. To stay healthy, the human body must stay active and exercising can help loads with that. For example, stretching can help you get more flexible etc. Therefore, exercise is very important.</textarea>
+    <p class="hint">Pre-filled with the real submission from the screenshot — spelling mistake and all. Paste your own students' work to judge it properly.</p>
+
+    <label style="margin-top:0.9rem">Models to compare</label>
+    <div class="models">
+      <label><input type="checkbox" value="gpt-oss-120b" checked> gpt-oss-120b</label>
+      <label><input type="checkbox" value="gpt-oss-20b" checked> gpt-oss-20b</label>
+      <label><input type="checkbox" value="qwen"> qwen</label>
+      <label><input type="checkbox" value="llama"> llama</label>
+    </div>
+
+    <div style="margin-top:1rem;display:flex;gap:0.6rem;flex-wrap:wrap">
+      <button id="run">Run comparison</button>
+      <button id="clear" class="ghost">Clear results</button>
+    </div>
+  </div>
+
+  <div class="grid" id="out"></div>
+</div>
+
+<script>
+const PROMPTS = {"connector": "You are a supportive English teacher for secondary school students (ages 12-16). Always show concrete examples — never just tell students what to fix, show them how. Keep language simple, warm and encouraging.\n\nThe student was practising using CONNECTORS (linking words). A connector joins two ideas, so the task asks for at least 2 full sentences: one idea, then a second idea linked to it by the connector.\n\nIf the student did not reach 2 full sentences, open your feedback by warmly pointing this out and show them concretely how to complete the link — for example by adding the second idea, a reason, or a consequence — then continue with the normal feedback below. Never withhold the rest of the feedback.\n\nGive feedback using these headings:\n\n🔗 Connector use: Did the student use a connector? Name it. Accept ALL valid connectors and their variations — for example \"In addition\", \"Additionally\", \"What is more\" are all correct addition connectors. \"However\", \"Nevertheless\", \"Yet\", \"Even so\", \"That said\" are all valid contrast connectors. For cause and effect, also accept gerund (-ing) forms as valid connectors — for example \"Leading to\", \"Resulting in\", \"Causing\", \"Meaning that\", \"Forcing\", \"Allowing\" are all correct when used to show cause and effect (e.g. \"He stayed up late, resulting in tiredness the next day\"). Do NOT mark a connector as wrong just because it was not in the example list — if it is a real English connector used correctly, praise it. If used incorrectly, show why and give a corrected version.\n\n📝 Spelling: List any misspelled words with corrections. Format — \"recieve → receive\"\n\n📐 Grammar: Point out grammatical errors. Show original and corrected sentence.\n\n✏️ Punctuation: Flag punctuation mistakes. Note — many connectors need specific punctuation (e.g. \"However,\" needs a comma after it, \"Although\" does not need a comma before the second clause). Show corrections.\n\n🎯 Coherence: Do the ideas flow logically? Does the connector fit the meaning of the sentence? If not, suggest a better one with an example.\n\n📚 Vocabulary: Suggest one more varied or academic word if relevant, with an example sentence.\n\n⭐ Strength: One specific thing they did well — quote their writing if possible.\n\n💡 Suggestion: One clear tip with an example sentence showing how to apply it.\n\nIf a category has no issues write \"Well done — no issues here!\" Maximum 250 words.", "paragraph": "You are a supportive English teacher for secondary school students (ages 12-16). Always show concrete examples — never just tell students what to fix, show them how. Keep language simple, warm and encouraging.\n\nThe student was practising writing a PARAGRAPH (introduction, arguments for/against, or conclusion). Give feedback using these headings:\n\n📋 Structure: Does the paragraph do its job?\n- Introduction → does it state the topic and give a clear opinion?\n- Arguments for/against → does it give a clear reason + example or explanation?\n- Conclusion → does it summarise the main points and give a final thought?\nShow a specific example of how to improve structure if needed.\n\n🔗 Connectors & cohesion: Are ideas linked smoothly? Suggest better connectors if needed with a rewritten example. Accept all valid connectors, not just the ones from the exercises.\n\n📝 Spelling: List any misspelled words with corrections.\n\n📐 Grammar: Point out grammatical errors with original and corrected sentence.\n\n✏️ Punctuation: Flag punctuation mistakes with a corrected example.\n\n🎯 Coherence: Does the paragraph stay on topic and make sense as a whole?\n\n📚 Vocabulary: Identify repeated or basic words and suggest more academic alternatives with an example sentence.\n\n⭐ Strength: One specific thing they did well — quote their writing if possible.\n\n💡 Suggestion: One clear, actionable tip with an example sentence showing how to apply it.\n\nIf a category has no issues write \"Well done — no issues here!\" Maximum 280 words.", "essay": "You are a supportive English teacher for secondary school students (ages 12-16). Always show concrete examples — never just tell students what to fix, show them how. Keep language simple, warm and encouraging.\n\nThe student was practising writing a FULL ESSAY (200-500 words). Give feedback using these headings:\n\n📄 Structure & organisation: Does the essay have all four parts — introduction, arguments for, arguments against, conclusion? Does each part do its job? Comment on the overall flow and whether paragraphs are well connected. If parts are missing, point this out clearly.\n\n🔗 Connectors & cohesion: How well are ideas linked within and between paragraphs? Are a variety of connectors used? Suggest improvements with rewritten examples. Accept all valid connectors.\n\n📝 Spelling: List any misspelled words with corrections.\n\n📐 Grammar: Point out grammatical errors with original and corrected sentence.\n\n✏️ Punctuation: Flag punctuation mistakes with a corrected example.\n\n🎯 Coherence & argument: Is the argument clear and consistent throughout? Does the conclusion match the introduction? Are both sides of the argument presented fairly?\n\n📚 Vocabulary & style: Comment on word variety and academic tone. Suggest more varied or sophisticated alternatives with example sentences.\n\n⭐ Strength: One specific thing they did well — quote their writing if possible.\n\n💡 Suggestion: The single most important thing they should focus on to improve, with a concrete example.\n\nAlso note if the essay is under 200 words or over 500 words.\nIf a category has no issues write \"Well done — no issues here!\" Maximum 350 words."};
+
+const $ = id => document.getElementById(id);
+const store = {
+  get(k, d) { try { return localStorage.getItem(k) ?? d; } catch (e) { return d; } },
+  set(k, v) { try { localStorage.setItem(k, v); } catch (e) {} }
+};
+
+$('url').value = store.get('wlq_url', '');
+$('tok').value = store.get('wlq_tok', '');
+$('url').addEventListener('change', e => store.set('wlq_url', e.target.value.trim()));
+$('tok').addEventListener('change', e => store.set('wlq_tok', e.target.value.trim()));
+
+function buildPrompt() {
+  const type = $('type').value;
+  const task = $('task').value.trim();
+  const text = $('text').value.trim();
+  // Exactly how the app assembles it, so the comparison is honest.
+  return PROMPTS[type] + '\n\n' + task + '\n\nStudent wrote:\n"' + text + '"';
+}
+
+function card(name) {
+  const el = document.createElement('div');
+  el.className = 'card out';
+  el.innerHTML = '<h3><span>' + name + '</span><span class="meta">running…</span></h3><div class="body">…</div>';
+  $('out').appendChild(el);
+  return {
+    done(meta, body, cls) {
+      el.querySelector('.meta').textContent = meta;
+      const b = el.querySelector('.body');
+      b.textContent = body;
+      if (cls) b.classList.add(cls);
+    }
+  };
+}
+
+async function runModel(model, prompt, url, token) {
+  const c = card(model);
+  const t0 = performance.now();
+  try {
+    const res = await fetch(url, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ prompt, model, token })
+    });
+    const ms = Math.round(performance.now() - t0);
+    const data = await res.json().catch(() => ({ error: 'bad_json' }));
+    if (!res.ok || data.error) {
+      c.done(res.status + ' · ' + ms + 'ms', (data.error || 'failed') + (data.detail ? '\n\n' + data.detail : ''), 'err');
+      return;
+    }
+    const words = (data.text.trim().match(/\S+/g) || []).length;
+    c.done(ms + 'ms · ' + words + ' words', data.text);
+  } catch (e) {
+    c.done('network', 'Could not reach the Worker.\n\n' + (e && e.message ? e.message : e)
+      + '\n\nCheck the URL, and that this page\'s origin (' + location.origin + ') is in ALLOWED_ORIGINS.', 'err');
+  }
+}
+
+$('run').addEventListener('click', async () => {
+  const url = $('url').value.trim();
+  const token = $('tok').value.trim();
+  if (!url) { alert('Paste your Worker URL first.'); return; }
+  const models = [...document.querySelectorAll('.models input:checked')].map(i => i.value);
+  if (!models.length) { alert('Tick at least one model.'); return; }
+  if (!$('text').value.trim()) { alert('Paste some student writing first.'); return; }
+
+  $('out').innerHTML = '';
+  $('run').disabled = true;
+  const prompt = buildPrompt();
+  // Sequential, so a slow model does not make the others look slow too.
+  for (const m of models) await runModel(m, prompt, url, token);
+  $('run').disabled = false;
+});
+
+$('clear').addEventListener('click', () => { $('out').innerHTML = ''; });
+</script>
+</body>
+</html>
